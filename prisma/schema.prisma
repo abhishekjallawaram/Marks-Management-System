@@ -1,0 +1,137 @@
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model CustomUser {
+  id                  Int              @id @default(autoincrement())
+  firstName           String
+  middleName          String? // Optional
+  lastName            String
+  password            String
+  email               String           @unique
+  phoneNumber         String           @unique
+  gender              String
+  academicDetails     String
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  isActive            Boolean          @default(true)
+  isAdmin             Boolean          @default(false)
+  isStudent           Boolean          @default(true)
+  isFaculty           Boolean          @default(false)
+  studentProfiles     StudentProfile[]
+  facultyProfiles     FacultyProfile[]
+  failedLoginAttempts Int              @default(0)
+  lockUntil           DateTime?
+}
+
+model BlacklistedToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+}
+
+model StudentProfile {
+  id             Int                @id @default(autoincrement())
+  collegeId      String             @unique
+  enrollmentYear Int
+  credits        Int
+  courseType     String
+  userId         Int
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  user           CustomUser         @relation(fields: [userId], references: [id], onDelete: Cascade) // onDelete behavior
+  courses        CourseEnrollment[]
+}
+
+model Department {
+  id              Int              @id @default(autoincrement())
+  name            String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  facultyProfiles FacultyProfile[]
+  courseLists     CourseList[]
+}
+
+model FacultyProfile {
+  id             Int          @id @default(autoincrement())
+  employmentType String
+  domain         String
+  employmentYear Int // Changed to Int to represent just the year
+  userId         Int
+  departmentId   Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  department     Department   @relation(fields: [departmentId], references: [id])
+  user           CustomUser   @relation(fields: [userId], references: [id], onDelete: Cascade) // onDelete behavior
+  coursesTaught  CourseList[]
+}
+
+model CourseList {
+  id                Int                @id @default(autoincrement())
+  name              String
+  level             String
+  type              String
+  credits           Int
+  startDate         DateTime
+  endDate           DateTime
+  term              String
+  section           String
+  maxStrength       Int
+  instructorId      Int
+  departmentId      Int
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  department        Department         @relation(fields: [departmentId], references: [id])
+  instructor        FacultyProfile     @relation(fields: [instructorId], references: [id])
+  courseEnrollments CourseEnrollment[]
+}
+
+model Assignment {
+  id          Int              @id @default(autoincrement())
+  name        String
+  category    String
+  marks       Int?
+  maxGrade    Int
+  weightage   Int
+  deadline    DateTime
+  penalty     DateTime
+  submittedAt DateTime? // Optional
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  courseId    Int
+  course      CourseEnrollment @relation(fields: [courseId], references: [id])
+}
+
+model Exams {
+  id        Int              @id @default(autoincrement())
+  examDate  DateTime
+  category  String
+  maxGrade  Int
+  weightage Int
+  marks     Int?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  courseId  Int
+  course    CourseEnrollment @relation(fields: [courseId], references: [id])
+}
+
+model CourseEnrollment {
+  id               Int            @id @default(autoincrement())
+  courseIdentifier String
+  year             Int
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  courseListId     Int
+  studentProfileId Int
+  course           CourseList     @relation(fields: [courseListId], references: [id])
+  studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id])
+  assignments      Assignment[]
+  exams            Exams[]
+
+  @@unique([studentProfileId, courseListId, year])
+}

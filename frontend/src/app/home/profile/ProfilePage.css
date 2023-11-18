@@ -1,0 +1,52 @@
+.content-container {
+    display: flex;
+    flex: 1;
+    justify-content: center; /* Center horizontally in the remaining space */
+    align-items: center; /* Center vertically the full height of the viewport */
+    height: 100vh;
+    margin-left: 200px; /* Adjust this to match the sidebar width */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.profile-container {
+    max-width: 600px; /* Set a max-width for larger screens */
+    margin: auto;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background: #fff;
+}
+
+.profile-title {
+    margin-bottom: 2rem;
+    color: #333;
+    font-size: 2rem;
+}
+
+.profile-details {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin: auto;
+}
+
+.profile-item {
+    border-bottom: 1px solid #eee;
+    padding: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-key {
+    color: #555;
+    font-weight: 500;
+    margin-right: 1rem;
+}
+
+.profile-value {
+    color: #777;
+    overflow-wrap: break-word;
+}

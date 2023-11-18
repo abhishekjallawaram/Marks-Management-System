@@ -1,0 +1,35 @@
+/* Home.css */
+.dashboard-container {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    grid-template-areas:
+    'calendar pie-chart'
+    'bar-chart radar-chart';
+}
+
+.calendar {
+    grid-area: calendar;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.pie-chart {
+    grid-area: pie-chart;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.bar-chart {
+    grid-area: bar-chart;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.radar-chart {
+    grid-area: radar-chart;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
